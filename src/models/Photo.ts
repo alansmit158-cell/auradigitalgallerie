@@ -9,7 +9,6 @@ export interface IPhoto extends Document {
     createdAt: Date;
     expiresAt: Date; // TTL Index (7 jours)
 }
-
 const PhotoSchema: Schema = new Schema({
     imageUrl: { type: String, required: true },
     storagePath: { type: String, required: true },
@@ -21,6 +20,8 @@ const PhotoSchema: Schema = new Schema({
         type: Date,
         default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 jours
     }
+}, {
+    collection: 'auradigitalgallerie_photos'
 });
 
 // Créer un index TTL : Le document sera automatiquement supprimé par MongoDB après l'expiration
