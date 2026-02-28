@@ -1,0 +1,56 @@
+import UploadPhoto from "@/components/UploadPhoto";
+import Gallery from "@/components/Gallery";
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-stone-50 font-sans selection:bg-amber-200">
+      {/* Hero Section */}
+      <section className="relative py-20 px-4 flex flex-col items-center justify-center text-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-stone-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-1/3 w-96 h-96 bg-amber-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-4000"></div>
+        </div>
+
+        <div className="relative z-10 max-w-3xl mx-auto space-y-6">
+          <p className="text-sm md:text-base font-semibold tracking-[0.3em] uppercase text-amber-800">Célébrons ensemble</p>
+          <h1 className="text-5xl md:text-7xl font-serif text-stone-900 leading-tight">
+            Raouia & Islem
+          </h1>
+          <p className="text-lg md:text-xl text-stone-600 font-light max-w-2xl mx-auto">
+            Immortalisez les plus beaux moments de notre mariage.
+            Partagez vos photos avec nous et tous les invités.
+          </p>
+        </div>
+      </section>
+
+      {/* Upload Section */}
+      <section className="py-12 px-4 relative z-20 -mt-8">
+        <div className="max-w-5xl mx-auto">
+          <UploadPhoto />
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section className="py-16 px-4 md:px-8 bg-white" id="galerie">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col items-center justify-center text-center mb-12 space-y-4">
+            <h2 className="text-4xl font-serif text-stone-800">Galerie Souvenirs</h2>
+            <div className="w-24 h-1 bg-amber-200 rounded-full"></div>
+            <p className="text-stone-500 font-light max-w-xl">
+              Retrouvez ici tous les instants magiques capturés par nos proches.
+            </p>
+          </div>
+          <Gallery />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 bg-stone-100 text-center border-t border-stone-200">
+        <p className="text-stone-500 text-sm font-light">
+          Fait avec <span className="text-amber-500">♥</span> pour Raouia & Islem. Créé par <span className="font-semibold text-stone-700">Aura Digital</span>
+        </p>
+      </footer>
+    </main>
+  );
+}
