@@ -2,8 +2,6 @@
 
 import { useState, useRef } from "react";
 import imageCompression from "browser-image-compression";
-import { storage } from "@/lib/firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { UploadCloud, CheckCircle2, Loader2, ImagePlus, X } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -13,7 +11,7 @@ export default function UploadPhoto() {
     const [message, setMessage] = useState("");
     const [isPrivate, setIsPrivate] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
-    const [progress, setProgress] = useState(0); // overall progress
+    const [progress, setProgress] = useState(0);
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -41,56 +39,57 @@ export default function UploadPhoto() {
         setStatus("idle");
         setProgress(0);
 
-        try {
-            const uploadedData: { imageUrl: string, storagePath: string }[] = [];
-            let totalBytesTransferred = 0;
-            let totalBytesTotal = 0;
+        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+        const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
+        if (!cloudName || !uploadPreset) {
+            console.error("Cloudinary configuration missing");
+            setStatus("error");
+            setIsUploading(false);
+            return;
+        }
+
+        try {
+            const uploadedData: { imageUrl: string, publicId: string }[] = [];
+
+            // Compression
             const compressionOptions = {
-                maxSizeMB: 1, // Max 1MB
+                maxSizeMB: 1,
                 maxWidthOrHeight: 1920,
                 useWebWorker: true,
             };
 
-            // Compresser toutes les images avant l'upload
             const compressedFiles = await Promise.all(
                 files.map(f => imageCompression(f.file, compressionOptions))
             );
 
-            // Calcul du poids total pour la barre de progression
-            totalBytesTotal = compressedFiles.reduce((acc, file) => acc + file.size, 0);
+            // Upload simple vers Cloudinary (Unsigned)
+            for (let i = 0; i < compressedFiles.length; i++) {
+                const file = compressedFiles[i];
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", uploadPreset);
+                formData.append("folder", "wedding_gallery");
 
-            // Upload séquentiel ou parallèle sur Firebase
-            const uploadPromises = compressedFiles.map((compressedFile) => {
-                return new Promise<{ imageUrl: string, storagePath: string }>((resolve, reject) => {
-                    const timestamp = Date.now();
-                    const storagePath = `wedding-photos/${timestamp}_${compressedFile.name}`;
-                    const storageRef = ref(storage, storagePath);
-                    const uploadTask = uploadBytesResumable(storageRef, compressedFile);
+                const res = await fetch(
+                    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+                    {
+                        method: "POST",
+                        body: formData,
+                    }
+                );
 
-                    let previousBytesTransferred = 0;
+                if (!res.ok) throw new Error("Cloudinary upload failed");
 
-                    uploadTask.on(
-                        "state_changed",
-                        (snapshot) => {
-                            const currentDelta = snapshot.bytesTransferred - previousBytesTransferred;
-                            totalBytesTransferred += currentDelta;
-                            previousBytesTransferred = snapshot.bytesTransferred;
-
-                            const progressPercent = (totalBytesTransferred / totalBytesTotal) * 100;
-                            setProgress(progressPercent);
-                        },
-                        (error) => reject(error),
-                        async () => {
-                            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                            resolve({ imageUrl: downloadURL, storagePath });
-                        }
-                    );
+                const data = await res.json();
+                uploadedData.push({
+                    imageUrl: data.secure_url,
+                    publicId: data.public_id
                 });
-            });
 
-            const results = await Promise.all(uploadPromises);
-            uploadedData.push(...results);
+                // Update progress
+                setProgress(((i + 1) / compressedFiles.length) * 100);
+            }
 
             // Save to MongoDB
             const response = await fetch("/api/photos", {
@@ -112,11 +111,10 @@ export default function UploadPhoto() {
                 setIsPrivate(false);
                 setProgress(0);
             } else {
-                console.error(await response.text());
                 setStatus("error");
             }
         } catch (error) {
-            console.error("Compression/Upload error:", error);
+            console.error("Upload error:", error);
             setStatus("error");
         } finally {
             setIsUploading(false);
@@ -148,7 +146,6 @@ export default function UploadPhoto() {
             ) : (
                 <form onSubmit={handleUpload} className="space-y-6">
                     <div className="space-y-4">
-                        {/* Zone d'Upload Principale */}
                         <div
                             onClick={() => fileInputRef.current?.click()}
                             className="relative flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden border-gray-200 bg-gray-50/50 hover:bg-gray-100 hover:border-amber-200"
@@ -166,11 +163,10 @@ export default function UploadPhoto() {
                                     <ImagePlus className="w-8 h-8 text-amber-500" />
                                 </div>
                                 <p className="mb-1 text-sm text-gray-600 font-medium px-4 text-center">Appuyez pour sélectionner plusieurs photos</p>
-                                <p className="text-xs text-gray-400">JPG, PNG, WEBP (compressé auto)</p>
+                                <p className="text-xs text-gray-400">JPG, PNG, WEBP (Cloudinary Gratuit)</p>
                             </div>
                         </div>
 
-                        {/* Aperçu des miniatures */}
                         {files.length > 0 && (
                             <div className="flex gap-3 overflow-x-auto py-2 -mx-2 px-2 snap-x scrollbar-thin scrollbar-thumb-amber-200 scrollbar-track-transparent">
                                 {files.map((f, index) => (
@@ -199,7 +195,7 @@ export default function UploadPhoto() {
                         />
 
                         <textarea
-                            placeholder="Un petit mot pour un souvenir magique ? (optionnel)"
+                            placeholder="Un petit mot ? (optionnel)"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             rows={3}
@@ -232,7 +228,7 @@ export default function UploadPhoto() {
                         {isUploading ? (
                             <div className="flex items-center space-x-2">
                                 <Loader2 className="w-5 h-5 animate-spin" />
-                                <span>Envoi en cours ({Math.round(progress)}%)</span>
+                                <span>Envoi Cloudinary ({Math.round(progress)}%)</span>
                             </div>
                         ) : (
                             <div className="flex items-center space-x-2">
@@ -242,10 +238,10 @@ export default function UploadPhoto() {
                         )}
                     </button>
 
-                    <p className="text-xs text-center text-stone-400">Les photos publiques resteront visibles 7 jours dans la galerie.</p>
+                    <p className="text-xs text-center text-stone-400 italic">Photos visibles 7 jours.</p>
 
                     {status === "error" && (
-                        <p className="text-red-500 text-sm text-center font-medium animate-pulse">Une erreur est survenue lors de l'envoi.</p>
+                        <p className="text-red-500 text-sm text-center font-medium">Vérifiez la configuration Cloudinary sur Vercel.</p>
                     )}
                 </form>
             )}

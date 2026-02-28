@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         for (const p of photos) {
             const newPhoto = new Photo({
                 imageUrl: p.imageUrl,
-                storagePath: p.storagePath,
+                publicId: p.publicId,
                 senderName: senderName || 'Un invité',
                 message: message || '',
                 isVisible

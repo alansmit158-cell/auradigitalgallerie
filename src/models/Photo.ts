@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IPhoto extends Document {
     imageUrl: string;
-    storagePath: string; // Pour retrouver le fichier et le supprimer de Storage
+    publicId: string; // Identifiant Cloudinary pour la suppression éventuelle
     senderName?: string;
     message?: string;
     isVisible: boolean;
@@ -11,7 +11,7 @@ export interface IPhoto extends Document {
 }
 const PhotoSchema: Schema = new Schema({
     imageUrl: { type: String, required: true },
-    storagePath: { type: String, required: true },
+    publicId: { type: String, required: true },
     senderName: { type: String, default: 'Un invité' },
     message: { type: String, default: '' },
     isVisible: { type: Boolean, default: true }, // Publique par défaut (selon la remarque)
