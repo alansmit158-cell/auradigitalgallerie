@@ -95,19 +95,19 @@ export default function Gallery() {
                         />
 
                         {/* Overlay avec infos et bouton Télécharger */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 md:p-4">
                             <div className="flex justify-between items-end gap-2">
                                 <div className="flex-1 min-w-0">
                                     {photo.message && (
-                                        <p className="text-white text-xs italic mb-1 line-clamp-2">"{photo.message}"</p>
+                                        <p className="text-white text-[10px] md:text-xs italic mb-1 line-clamp-2">"{photo.message}"</p>
                                     )}
                                     {photo.senderName && (
-                                        <p className="text-amber-300 text-[10px] font-bold uppercase tracking-wider truncate">De {photo.senderName}</p>
+                                        <p className="text-amber-300 text-[9px] md:text-[10px] font-bold uppercase tracking-wider truncate">De {photo.senderName}</p>
                                     )}
                                 </div>
                                 <button
                                     onClick={() => downloadImage(photo.imageUrl, `mariage-${photo._id}.jpg`)}
-                                    className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white hover:text-amber-600 transition-all shadow-lg"
+                                    className="p-2 bg-amber-600 md:bg-white/20 backdrop-blur-md rounded-full text-white md:hover:bg-white md:hover:text-amber-600 transition-all shadow-lg active:scale-95"
                                     title="Télécharger"
                                 >
                                     <Download className="w-4 h-4" />
