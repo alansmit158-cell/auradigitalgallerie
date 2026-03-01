@@ -79,7 +79,11 @@ export default function UploadPhoto() {
                     }
                 );
 
-                if (!res.ok) throw new Error("Cloudinary upload failed");
+                if (!res.ok) {
+                    const errorDetail = await res.json();
+                    console.error("Détails de l'erreur Cloudinary:", errorDetail);
+                    throw new Error(errorDetail.error?.message || "Cloudinary upload failed");
+                }
 
                 const data = await res.json();
                 uploadedData.push({
