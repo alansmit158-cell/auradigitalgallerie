@@ -43,7 +43,7 @@ export default function UploadPhoto() {
         const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
         if (!cloudName || !uploadPreset) {
-            console.error("Cloudinary configuration missing:", { cloudName: !!cloudName, uploadPreset: !!uploadPreset });
+            console.error("Cloudinary configuration missing");
             setStatus("error");
             setIsUploading(false);
             return;
