@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, ShieldCheck, Trash2, X, Maximize2, User, MessageSquare } from "lucide-react";
+import { Download, ShieldCheck, Trash2, X, Maximize2, User, MessageSquare, Eye } from "lucide-react";
 
 interface PhotoData {
     _id: string;
@@ -77,6 +77,25 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
         }
     };
 
+    const toggleVisibility = async (id: string, currentVisibility: boolean) => {
+        try {
+            const res = await fetch(`/api/photos?id=${id}&admin=true`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ isVisible: !currentVisibility }),
+            });
+            if (res.ok) {
+                const updated = await res.json();
+                setPhotos(photos.map(p => p._id === id ? updated : p));
+                if (selectedPhoto?._id === id) {
+                    setSelectedPhoto(updated);
+                }
+            }
+        } catch (error) {
+            console.error("Visibility toggle failed", error);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -143,15 +162,29 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                                 <div className="truncate pr-2">
                                     <p className="text-white text-[10px] truncate font-medium">{photo.senderName}</p>
                                 </div>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        downloadImage(photo.imageUrl, `mariage-${photo._id}.jpg`);
-                                    }}
-                                    className="p-1.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-amber-600 transition-colors shadow-lg"
-                                >
-                                    <Download className="w-3.5 h-3.5" />
-                                </button>
+                                <div className="flex gap-1">
+                                    {isAdmin && !photo.isVisible && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleVisibility(photo._id, photo.isVisible);
+                                            }}
+                                            className="p-1.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-green-600 transition-colors shadow-lg"
+                                            title="Rendre visible"
+                                        >
+                                            <Eye className="w-3.5 h-3.5" />
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            downloadImage(photo.imageUrl, `mariage-${photo._id}.jpg`);
+                                        }}
+                                        className="p-1.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-amber-600 transition-colors shadow-lg"
+                                    >
+                                        <Download className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     ))}
@@ -197,15 +230,29 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                                 {/* Boutons Flottants (Mobile seulement) */}
                                 <div className="md:hidden absolute bottom-4 right-4 flex flex-col gap-3 z-30">
                                     {isAdmin && (
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                deletePhoto(selectedPhoto._id);
-                                            }}
-                                            className="p-4 bg-red-500 text-white rounded-full shadow-2xl active:scale-95"
-                                        >
-                                            <Trash2 className="w-6 h-6" />
-                                        </button>
+                                        <>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deletePhoto(selectedPhoto._id);
+                                                }}
+                                                className="p-4 bg-red-500 text-white rounded-full shadow-2xl active:scale-95"
+                                            >
+                                                <Trash2 className="w-6 h-6" />
+                                            </button>
+                                            {!selectedPhoto.isVisible && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        toggleVisibility(selectedPhoto._id, selectedPhoto.isVisible);
+                                                    }}
+                                                    className="p-4 bg-green-600 text-white rounded-full shadow-2xl active:scale-95"
+                                                    title="Rendre visible"
+                                                >
+                                                    <Eye className="w-6 h-6" />
+                                                </button>
+                                            )}
+                                        </>
                                     )}
                                     <button
                                         onClick={(e) => {
@@ -261,13 +308,24 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                                     </button>
 
                                     {isAdmin && (
-                                        <button
-                                            onClick={() => deletePhoto(selectedPhoto._id)}
-                                            className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-red-100 text-red-500 rounded-2xl hover:bg-red-50 transition-all font-medium"
-                                        >
-                                            <Trash2 className="w-5 h-5" />
-                                            Supprimer définitivement
-                                        </button>
+                                        <>
+                                            {!selectedPhoto.isVisible && (
+                                                <button
+                                                    onClick={() => toggleVisibility(selectedPhoto._id, selectedPhoto.isVisible)}
+                                                    className="flex items-center justify-center gap-3 w-full py-4 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition-all font-medium"
+                                                >
+                                                    <Eye className="w-5 h-5" />
+                                                    Rendre visible aux invités
+                                                </button>
+                                            )}
+                                            <button
+                                                onClick={() => deletePhoto(selectedPhoto._id)}
+                                                className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-red-100 text-red-500 rounded-2xl hover:bg-red-50 transition-all font-medium"
+                                            >
+                                                <Trash2 className="w-5 h-5" />
+                                                Supprimer définitivement
+                                            </button>
+                                        </>
                                     )}
                                 </div>
                             </div>

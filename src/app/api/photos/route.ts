@@ -73,3 +73,34 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ error: 'Failed to delete photo' }, { status: 500 });
     }
 }
+
+export async function PATCH(req: Request) {
+    try {
+        await connectToDatabase();
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+        const isAdmin = searchParams.get('admin') === 'true';
+
+        if (!isAdmin) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!id) {
+            return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+        }
+
+        const body = await req.json();
+        const { isVisible } = body;
+
+        const updatedPhoto = await Photo.findByIdAndUpdate(
+            id,
+            { isVisible },
+            { new: true }
+        );
+
+        return NextResponse.json(updatedPhoto);
+    } catch (error) {
+        console.error('Error updating photo:', error);
+        return NextResponse.json({ error: 'Failed to update photo' }, { status: 500 });
+    }
+}
