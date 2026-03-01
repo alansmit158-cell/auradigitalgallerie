@@ -3,13 +3,17 @@
 import { useState } from "react";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
-import { Heart, ArrowLeft, Lock, ArrowRight } from "lucide-react";
+import { Heart, ArrowLeft, Lock, ArrowRight, Activity, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function PrivateAlbumPage() {
     const [password, setPassword] = useState("");
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [error, setError] = useState(false);
+
+    // États pour le test de connexion
+    const [isTesting, setIsTesting] = useState(false);
+    const [testResult, setTestResult] = useState<{ success: boolean, message: string } | null>(null);
 
     const CORRECT_PASSWORD = "raouiaislem03.05.2026";
 
@@ -21,6 +25,24 @@ export default function PrivateAlbumPage() {
         } else {
             setError(true);
             setPassword("");
+        }
+    };
+
+    const runVercelTest = async () => {
+        setIsTesting(true);
+        setTestResult(null);
+        try {
+            const res = await fetch('/api/admin/test-db?admin=true', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                setTestResult({ success: true, message: "Connexion Vercel ➔ MongoDB ➔ Cloudinary : RÉUSSIE ! Une photo de test a été ajoutée." });
+            } else {
+                setTestResult({ success: false, message: "Erreur : " + (data.error || "Échec du test") });
+            }
+        } catch (err) {
+            setTestResult({ success: false, message: "Erreur réseau lors du test." });
+        } finally {
+            setIsTesting(false);
         }
     };
 
@@ -98,7 +120,7 @@ export default function PrivateAlbumPage() {
                                 Retour à l'accueil
                             </Link>
 
-                            <div className="space-y-2">
+                            <div className="space-y-4">
                                 <div className="flex items-center justify-center gap-3 text-amber-600 mb-2">
                                     <Heart className="w-6 h-6 fill-current" />
                                     <span className="uppercase tracking-[0.3em] text-sm font-bold">Espace Privé</span>
@@ -110,6 +132,30 @@ export default function PrivateAlbumPage() {
                                 <p className="text-stone-500 font-light max-w-xl mx-auto italic text-sm md:text-base">
                                     Raouia & Islem, voici toutes les photos partagées par vos invités, y compris les souvenirs gardés privés.
                                 </p>
+
+                                {/* Outil de Diagnostic Vercel */}
+                                <div className="pt-4">
+                                    {!testResult ? (
+                                        <button
+                                            onClick={runVercelTest}
+                                            disabled={isTesting}
+                                            className="inline-flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full text-xs font-semibold transition-all border border-stone-200 disabled:opacity-50"
+                                        >
+                                            {isTesting ? <Loader2 className="w-3 h-3 animate-spin text-amber-600" /> : <Activity className="w-3 h-3 text-amber-600" />}
+                                            {isTesting ? "Test de connexion en cours..." : "Lancer un test de connexion (Vercel)"}
+                                        </button>
+                                    ) : (
+                                        <motion.div
+                                            initial={{ scale: 0.9, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium border ${testResult.success ? 'bg-green-50 border-green-100 text-green-700' : 'bg-red-50 border-red-100 text-red-700'}`}
+                                        >
+                                            {testResult.success ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                                            {testResult.message}
+                                            <button onClick={() => setTestResult(null)} className="ml-2 underline opacity-50 hover:opacity-100">X</button>
+                                        </motion.div>
+                                    )}
+                                </div>
                             </div>
                             <div className="w-24 h-1 bg-amber-200 rounded-full"></div>
                         </div>
