@@ -183,30 +183,38 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                             </button>
 
                             {/* Image (Gauche) */}
-                            <div className="md:w-3/5 bg-stone-100 relative group min-h-[300px]">
+                            <div className="md:w-3/5 bg-stone-100 relative group min-h-[50vh] md:min-h-[300px]">
                                 <img
                                     src={selectedPhoto.imageUrl}
                                     alt="Détails"
                                     className="w-full h-full object-contain"
                                 />
                                 {!selectedPhoto.isVisible && (
-                                    <div className="absolute top-6 left-6 px-3 py-1 bg-amber-500 text-white text-xs font-bold uppercase rounded-full shadow-lg">
-                                        Souvenir Privé
+                                    <div className="absolute top-4 left-4 px-3 py-1 bg-amber-500 text-white text-[10px] font-bold uppercase rounded-full shadow-lg">
+                                        Privé
                                     </div>
                                 )}
+                                {/* Bouton Télécharger Flottant (Mobile seulement) */}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        downloadImage(selectedPhoto.imageUrl, `mariage-${selectedPhoto._id}.jpg`);
+                                    }}
+                                    className="md:hidden absolute bottom-4 right-4 p-4 bg-amber-600 text-white rounded-full shadow-2xl active:scale-95 z-30"
+                                >
+                                    <Download className="w-6 h-6" />
+                                </button>
                             </div>
 
                             {/* Infos (Droite) */}
-                            <div className="md:w-2/5 p-8 md:p-12 flex flex-col justify-between space-y-8 bg-white overflow-y-auto">
-                                <div className="space-y-8 mt-4 md:mt-0">
-                                    <div className="space-y-4">
-                                        <div className="flex items-center gap-3 text-amber-600">
-                                            <div className="p-2 bg-amber-50 rounded-xl">
-                                                <User className="w-5 h-5" />
-                                            </div>
-                                            <span className="text-xs font-bold uppercase tracking-widest">Partagé par</span>
+                            <div className="md:w-2/5 p-6 md:p-12 flex flex-col justify-between space-y-6 bg-white overflow-y-auto">
+                                <div className="space-y-6 mt-2 md:mt-0">
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2 text-amber-600">
+                                            <User className="w-4 h-4" />
+                                            <span className="text-[10px] font-bold uppercase tracking-widest">Partagé par</span>
                                         </div>
-                                        <p className="text-2xl font-serif text-stone-900">{selectedPhoto.senderName}</p>
+                                        <p className="text-xl md:text-2xl font-serif text-stone-900">{selectedPhoto.senderName}</p>
                                     </div>
 
                                     {selectedPhoto.message && (
