@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
+// CORRECTIF DNS : Force l'utilisation des DNS Google pour résoudre l'erreur SRV MongoDB
+require('dns').setServers(['8.8.8.8', '8.8.4.4']);
+
 require('dotenv').config({ path: path.join(__dirname, '.env.local') });
 
 // --- CONFIGURATION ---
