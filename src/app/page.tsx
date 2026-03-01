@@ -1,12 +1,15 @@
 import UploadPhoto from "@/components/UploadPhoto";
 import Gallery from "@/components/Gallery";
+import CoupleSection from "@/components/CoupleSection";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-stone-50 font-sans selection:bg-amber-200">
       {/* Hero Section */}
       <section className="relative py-20 px-4 flex flex-col items-center justify-center text-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
+        {/* ... (contenu existant) */}
+        <div className="absolute inset-0 z-0 text-amber-100/10">
+          {/* Bulles décoratives */}
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-stone-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
           <div className="absolute -bottom-8 left-1/3 w-96 h-96 bg-amber-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-4000"></div>
@@ -24,8 +27,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Section des Mariés */}
+      <CoupleSection />
+
       {/* Upload Section */}
-      <section className="py-12 px-4 relative z-20 -mt-8">
+      <section className="py-12 px-4 relative z-20">
         <div className="max-w-5xl mx-auto">
           <UploadPhoto />
         </div>
