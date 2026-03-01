@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Download } from "lucide-react";
 
 interface PhotoData {
     _id: string;
@@ -14,6 +15,28 @@ interface PhotoData {
 export default function Gallery() {
     const [photos, setPhotos] = useState<PhotoData[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const downloadImage = async (url: string, filename: string) => {
+        try {
+            // Pour Cloudinary, il faut s'assurer que les en-têtes CORS permettent l'accès
+            // ou utiliser un lien direct si le navigateur le permet.
+            // Le fetch blob est la méthode la plus fiable pour forcer le téléchargement.
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error("Download failed", error);
+            // Fallback : ouvrir dans un nouvel onglet si le fetch échoue (ex: CORS)
+            window.open(url, '_blank');
+        }
+    };
 
     useEffect(() => {
         const fetchPhotos = async () => {
@@ -71,13 +94,25 @@ export default function Gallery() {
                             loading="lazy"
                         />
 
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            {photo.message && (
-                                <p className="text-white text-sm italic mb-2 line-clamp-3">"{photo.message}"</p>
-                            )}
-                            {photo.senderName && (
-                                <p className="text-amber-300 text-xs font-semibold uppercase tracking-wider">De {photo.senderName}</p>
-                            )}
+                        {/* Overlay avec infos et bouton Télécharger */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                            <div className="flex justify-between items-end gap-2">
+                                <div className="flex-1 min-w-0">
+                                    {photo.message && (
+                                        <p className="text-white text-xs italic mb-1 line-clamp-2">"{photo.message}"</p>
+                                    )}
+                                    {photo.senderName && (
+                                        <p className="text-amber-300 text-[10px] font-bold uppercase tracking-wider truncate">De {photo.senderName}</p>
+                                    )}
+                                </div>
+                                <button
+                                    onClick={() => downloadImage(photo.imageUrl, `mariage-${photo._id}.jpg`)}
+                                    className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white hover:text-amber-600 transition-all shadow-lg"
+                                    title="Télécharger"
+                                >
+                                    <Download className="w-4 h-4" />
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 ))}
