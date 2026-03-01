@@ -1,6 +1,8 @@
 import UploadPhoto from "@/components/UploadPhoto";
 import Gallery from "@/components/Gallery";
 import CoupleSection from "@/components/CoupleSection";
+import Link from "next/link";
+import { Heart } from "lucide-react";
 
 export default function Home() {
   return (
@@ -56,6 +58,13 @@ export default function Home() {
         <p className="text-stone-500 text-sm font-light">
           Fait avec <span className="text-amber-500">♥</span> pour Raouia & Islem. Créé par <span className="font-semibold text-stone-700">Aura Digital</span>
         </p>
+        <Link
+          href="/notre-album"
+          className="mt-4 inline-block text-stone-300 hover:text-amber-200 transition-colors"
+          title="Espace Mariés"
+        >
+          <Heart className="w-3 h-3 fill-current" />
+        </Link>
       </footer>
     </main>
   );
