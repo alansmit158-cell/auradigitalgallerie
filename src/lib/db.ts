@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI!;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-    // Optionnel en dev si on ne veut pas crasher on importe rien
-    console.warn('Veuillez définir la variable d\'environnement MONGODB_URI');
+    console.warn('⚠️ MONGODB_URI est manquante dans les variables d\'environnement');
 }
 
 let cached = (global as any).mongoose;
@@ -23,7 +22,11 @@ async function connectToDatabase() {
             bufferCommands: false,
         };
 
-        cached.promise = mongoose.connect(MONGODB_URI || "mongodb://localhost:27017/auradigitalgallerie", opts).then((mongoose) => {
+        if (!MONGODB_URI) {
+            throw new Error("La variable MONGODB_URI n'est pas configurée sur Vercel.");
+        }
+
+        cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
             return mongoose;
         });
     }
