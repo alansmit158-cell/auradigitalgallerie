@@ -241,7 +241,15 @@ export default function UploadPhoto() {
                     <p className="text-xs text-center text-stone-400 italic">Photos visibles 7 jours.</p>
 
                     {status === "error" && (
-                        <p className="text-red-500 text-sm text-center font-medium">Vérifiez la configuration Cloudinary sur Vercel.</p>
+                        <div className="text-red-500 text-sm text-center font-medium space-y-1">
+                            <p>Oups ! L'envoi a échoué.</p>
+                            {!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME && (
+                                <p className="text-[10px] opacity-70">Erreur : Variable Cloud Name manquante sur Vercel.</p>
+                            )}
+                            {!process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET && (
+                                <p className="text-[10px] opacity-70">Erreur : Variable Upload Preset manquante sur Vercel.</p>
+                            )}
+                        </div>
                     )}
                 </form>
             )}
