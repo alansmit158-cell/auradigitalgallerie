@@ -194,16 +194,29 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                                         Privé
                                     </div>
                                 )}
-                                {/* Bouton Télécharger Flottant (Mobile seulement) */}
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        downloadImage(selectedPhoto.imageUrl, `mariage-${selectedPhoto._id}.jpg`);
-                                    }}
-                                    className="md:hidden absolute bottom-4 right-4 p-4 bg-amber-600 text-white rounded-full shadow-2xl active:scale-95 z-30"
-                                >
-                                    <Download className="w-6 h-6" />
-                                </button>
+                                {/* Boutons Flottants (Mobile seulement) */}
+                                <div className="md:hidden absolute bottom-4 right-4 flex flex-col gap-3 z-30">
+                                    {isAdmin && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deletePhoto(selectedPhoto._id);
+                                            }}
+                                            className="p-4 bg-red-500 text-white rounded-full shadow-2xl active:scale-95"
+                                        >
+                                            <Trash2 className="w-6 h-6" />
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            downloadImage(selectedPhoto.imageUrl, `mariage-${selectedPhoto._id}.jpg`);
+                                        }}
+                                        className="p-4 bg-amber-600 text-white rounded-full shadow-2xl active:scale-95"
+                                    >
+                                        <Download className="w-6 h-6" />
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Infos (Droite) */}
