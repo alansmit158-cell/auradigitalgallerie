@@ -51,3 +51,25 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Failed to upload photos' }, { status: 500 });
     }
 }
+export async function DELETE(req: Request) {
+    try {
+        await connectToDatabase();
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+        const isAdmin = searchParams.get('admin') === 'true';
+
+        if (!isAdmin) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!id) {
+            return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+        }
+
+        await Photo.findByIdAndDelete(id);
+        return NextResponse.json({ message: 'Photo deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting photo:', error);
+        return NextResponse.json({ error: 'Failed to delete photo' }, { status: 500 });
+    }
+}
