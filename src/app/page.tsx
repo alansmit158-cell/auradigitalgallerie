@@ -6,7 +6,15 @@ import { Heart } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-stone-50 font-sans selection:bg-amber-200">
+    <main className="min-h-screen bg-stone-50 font-sans selection:bg-amber-200 relative">
+      {/* Lien Secret (Haut) */}
+      <Link
+        href="/notre-album"
+        className="fixed top-4 right-4 z-[100] p-3 text-stone-200 hover:text-amber-500 transition-all duration-500 opacity-50 hover:opacity-100"
+        title="Accès Mariés"
+      >
+        <Heart className="w-5 h-5 fill-current" />
+      </Link>
       {/* Hero Section */}
       <section className="relative py-20 px-4 flex flex-col items-center justify-center text-center overflow-hidden">
         {/* ... (contenu existant) */}
@@ -19,15 +27,8 @@ export default function Home() {
 
         <div className="relative z-10 max-w-3xl mx-auto space-y-6">
           <p className="text-sm md:text-base font-semibold tracking-[0.3em] uppercase text-amber-800">Célébrons ensemble</p>
-          <h1 className="text-5xl md:text-7xl font-serif text-stone-900 leading-tight relative">
+          <h1 className="text-5xl md:text-7xl font-serif text-stone-900 leading-tight">
             Raouia & Islem
-            <Link
-              href="/notre-album"
-              className="absolute -top-4 -right-2 md:-right-8 text-stone-100 hover:text-amber-200 transition-colors p-2"
-              title="Espace Mariés"
-            >
-              <Heart className="w-4 h-4 fill-current" />
-            </Link>
           </h1>
           <p className="text-lg md:text-xl text-stone-600 font-light max-w-2xl mx-auto">
             Immortalisez les plus beaux moments de notre mariage.
@@ -65,13 +66,6 @@ export default function Home() {
         <p className="text-stone-500 text-sm font-light">
           Fait avec <span className="text-amber-500">♥</span> pour Raouia & Islem. Créé par <span className="font-semibold text-stone-700">Aura Digital</span>
         </p>
-        <Link
-          href="/notre-album"
-          className="mt-4 inline-block text-stone-300 hover:text-amber-200 transition-colors"
-          title="Espace Mariés"
-        >
-          <Heart className="w-3 h-3 fill-current" />
-        </Link>
       </footer>
     </main>
   );
