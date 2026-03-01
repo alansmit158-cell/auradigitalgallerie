@@ -39,7 +39,7 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
 
     useEffect(() => {
         fetchPhotos();
-        const interval = setInterval(fetchPhotos, 30000);
+        const interval = setInterval(fetchPhotos, 5000); // 5 secondes pour le "temps réel"
         return () => clearInterval(interval);
     }, [isAdmin]);
 
@@ -117,12 +117,41 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
 
     return (
         <div className="space-y-6">
-            {isAdmin && (
-                <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-full w-fit mx-auto mb-8 border border-amber-200 shadow-sm">
-                    <ShieldCheck className="w-4 h-4" />
-                    <span className="text-xs font-bold uppercase tracking-widest">Mode Mariés (Tout est visible)</span>
-                </div>
-            )}
+            <div className="flex flex-col items-center gap-4 mb-8">
+                {isAdmin && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-full border border-amber-200 shadow-sm">
+                        <ShieldCheck className="w-4 h-4" />
+                        <span className="text-xs font-bold uppercase tracking-widest">Mode Mariés (Tout est visible)</span>
+                    </div>
+                )}
+
+                {/* Compteur de photos en temps réel */}
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 px-6 py-3 bg-white border border-stone-100 shadow-xl rounded-2xl"
+                >
+                    <div className="p-2 bg-amber-50 rounded-lg">
+                        <motion.div
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                        >
+                            <Maximize2 className="w-4 h-4 text-amber-600" />
+                        </motion.div>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-[10px] text-stone-400 uppercase font-bold tracking-tighter leading-none">Total Souvenirs</span>
+                        <motion.span
+                            key={photos.length}
+                            initial={{ scale: 1.5, color: "#d97706" }}
+                            animate={{ scale: 1, color: "#1c1917" }}
+                            className="text-xl font-serif font-bold text-stone-900"
+                        >
+                            {photos.length}
+                        </motion.span>
+                    </div>
+                </motion.div>
+            </div>
 
             <div className="w-full columns-2 md:columns-3 lg:columns-3 xl:columns-4 gap-4 space-y-4">
                 <AnimatePresence>

@@ -19,8 +19,15 @@ export default function Home() {
 
         <div className="relative z-10 max-w-3xl mx-auto space-y-6">
           <p className="text-sm md:text-base font-semibold tracking-[0.3em] uppercase text-amber-800">Célébrons ensemble</p>
-          <h1 className="text-5xl md:text-7xl font-serif text-stone-900 leading-tight">
+          <h1 className="text-5xl md:text-7xl font-serif text-stone-900 leading-tight relative">
             Raouia & Islem
+            <Link
+              href="/notre-album"
+              className="absolute -top-4 -right-2 md:-right-8 text-stone-100 hover:text-amber-200 transition-colors p-2"
+              title="Espace Mariés"
+            >
+              <Heart className="w-4 h-4 fill-current" />
+            </Link>
           </h1>
           <p className="text-lg md:text-xl text-stone-600 font-light max-w-2xl mx-auto">
             Immortalisez les plus beaux moments de notre mariage.
