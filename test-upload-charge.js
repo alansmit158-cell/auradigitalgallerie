@@ -38,7 +38,7 @@ const Photo = mongoose.models.Photo || mongoose.model('Photo', PhotoSchema);
 // --- FONCTION DE TEST ---
 
 async function stressTest() {
-    const totalPhotos = 1; // Uniquement une photo par défaut
+    const totalPhotos = 5000; // Test de charge avec 5000 photos
     const imagePath = path.join(__dirname, 'public', 'wedding_couple_illustration.png');
 
     if (!fs.existsSync(imagePath)) {
