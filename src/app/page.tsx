@@ -2,7 +2,7 @@ import UploadPhoto from "@/components/UploadPhoto";
 import Gallery from "@/components/Gallery";
 import CoupleSection from "@/components/CoupleSection";
 import Link from "next/link";
-import { Heart } from "lucide-react";
+import { Heart, Instagram, Facebook, Youtube, MessageCircle, Link as LinkIcon } from "lucide-react";
 
 export default function Home() {
   return (
@@ -62,10 +62,70 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 bg-stone-100 text-center border-t border-stone-200">
-        <p className="text-stone-500 text-sm font-light">
-          Fait avec <span className="text-amber-500">♥</span> pour Raouia & Islem. Créé par <span className="font-semibold text-stone-700">Aura Digital</span>
-        </p>
+      <footer className="py-12 bg-stone-100/50 text-center border-t border-stone-200">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center space-y-8">
+          {/* Logo */}
+          <div className="flex justify-center">
+            <img src="/00.png" alt="Aura Digital Logo" className="h-12 w-auto object-contain opacity-90" />
+          </div>
+
+          {/* Réseaux Sociaux */}
+          <div className="flex gap-6 items-center">
+            <a
+              href="https://www.instagram.com/aura_____digital/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#4B5345] hover:text-amber-600 hover:scale-110 transition-all"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
+
+            <a
+              href="https://www.facebook.com/profile.php?id=61588511615603"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#4B5345] hover:text-amber-600 hover:scale-110 transition-all"
+              aria-label="Facebook"
+            >
+              <Facebook className="w-5 h-5" />
+            </a>
+
+            <a
+              href="https://www.youtube.com/@auradigital2026"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#4B5345] hover:text-amber-600 hover:scale-110 transition-all"
+              aria-label="YouTube"
+            >
+              <Youtube className="w-5 h-5" />
+            </a>
+
+            <a
+              href="https://api.whatsapp.com/send?phone=21629574856"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#4B5345] hover:text-amber-600 hover:scale-110 transition-all"
+              aria-label="WhatsApp"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </a>
+
+            <a
+              href="https://linktr.ee/Aura_Digital"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#4B5345] hover:text-amber-600 hover:scale-110 transition-all"
+              aria-label="Linktree"
+            >
+              <LinkIcon className="w-5 h-5" />
+            </a>
+          </div>
+
+          <div className="text-[#4B5345]/60 text-xs font-sans mt-2">
+            © {new Date().getFullYear()} Aura Digital. Tous droits réservés.
+          </div>
+        </div>
       </footer>
     </main>
   );
