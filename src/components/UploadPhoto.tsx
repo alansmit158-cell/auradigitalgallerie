@@ -33,66 +33,68 @@ export default function UploadPhoto() {
 
     const handleUpload = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (files.length === 0) return;
+        if (files.length === 0 && message.trim().length === 0) return;
 
         setIsUploading(true);
         setStatus("idle");
         setProgress(0);
 
-        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-        const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-
-        if (!cloudName || !uploadPreset) {
-            console.error("Cloudinary configuration missing");
-            setStatus("error");
-            setIsUploading(false);
-            return;
-        }
-
         try {
             const uploadedData: { imageUrl: string, publicId: string }[] = [];
 
-            // Compression
-            const compressionOptions = {
-                maxSizeMB: 1,
-                maxWidthOrHeight: 1920,
-                useWebWorker: true,
-            };
+            if (files.length > 0) {
+                const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+                const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-            const compressedFiles = await Promise.all(
-                files.map(f => imageCompression(f.file, compressionOptions))
-            );
-
-            // Upload simple vers Cloudinary (Unsigned)
-            for (let i = 0; i < compressedFiles.length; i++) {
-                const file = compressedFiles[i];
-                const formData = new FormData();
-                formData.append("file", file);
-                formData.append("upload_preset", uploadPreset);
-                formData.append("folder", "wedding_gallery");
-
-                const res = await fetch(
-                    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                    {
-                        method: "POST",
-                        body: formData,
-                    }
-                );
-
-                if (!res.ok) {
-                    const errorDetail = await res.json();
-                    console.error("Détails de l'erreur Cloudinary:", errorDetail);
-                    throw new Error(errorDetail.error?.message || "Cloudinary upload failed");
+                if (!cloudName || !uploadPreset) {
+                    console.error("Cloudinary configuration missing");
+                    setStatus("error");
+                    setIsUploading(false);
+                    return;
                 }
 
-                const data = await res.json();
-                uploadedData.push({
-                    imageUrl: data.secure_url,
-                    publicId: data.public_id
-                });
+                // Compression
+                const compressionOptions = {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 1920,
+                    useWebWorker: true,
+                };
 
-                // Update progress
-                setProgress(((i + 1) / compressedFiles.length) * 100);
+                const compressedFiles = await Promise.all(
+                    files.map(f => imageCompression(f.file, compressionOptions))
+                );
+
+                // Upload simple vers Cloudinary (Unsigned)
+                for (let i = 0; i < compressedFiles.length; i++) {
+                    const file = compressedFiles[i];
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    formData.append("upload_preset", uploadPreset);
+                    formData.append("folder", "wedding_gallery");
+
+                    const res = await fetch(
+                        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+                        {
+                            method: "POST",
+                            body: formData,
+                        }
+                    );
+
+                    if (!res.ok) {
+                        const errorDetail = await res.json();
+                        console.error("Détails de l'erreur Cloudinary:", errorDetail);
+                        throw new Error(errorDetail.error?.message || "Cloudinary upload failed");
+                    }
+
+                    const data = await res.json();
+                    uploadedData.push({
+                        imageUrl: data.secure_url,
+                        publicId: data.public_id
+                    });
+
+                    // Update progress
+                    setProgress(((i + 1) / compressedFiles.length) * 100);
+                }
             }
 
             // Save to MongoDB
@@ -226,18 +228,18 @@ export default function UploadPhoto() {
 
                     <button
                         type="submit"
-                        disabled={files.length === 0 || isUploading}
-                        className={`w-full flex items-center justify-center px-6 py-4 rounded-full font-bold text-white transition-all duration-300 ${files.length === 0 || isUploading ? "bg-gray-300 cursor-not-allowed" : "bg-primary hover:bg-primary-dark shadow-xl hover:-translate-y-0.5"}`}
+                        disabled={(files.length === 0 && message.trim().length === 0) || isUploading}
+                        className={`w-full flex items-center justify-center px-6 py-4 rounded-full font-bold text-white transition-all duration-300 ${(files.length === 0 && message.trim().length === 0) || isUploading ? "bg-gray-300 cursor-not-allowed" : "bg-primary hover:bg-primary-dark shadow-xl hover:-translate-y-0.5"}`}
                     >
                         {isUploading ? (
                             <div className="flex items-center space-x-2">
                                 <Loader2 className="w-5 h-5 animate-spin" />
-                                <span>Envoi Cloudinary ({Math.round(progress)}%)</span>
+                                <span>{files.length > 0 ? `Envoi Cloudinary (${Math.round(progress)}%)` : "Envoi en cours..."}</span>
                             </div>
                         ) : (
                             <div className="flex items-center space-x-2">
                                 <UploadCloud className="w-5 h-5" />
-                                <span>Partager {files.length > 0 ? `${files.length} photo${files.length > 1 ? 's' : ''}` : "vos photos"}</span>
+                                <span>Partager {files.length > 0 ? `${files.length} photo${files.length > 1 ? 's' : ''}` : "votre mot"}</span>
                             </div>
                         )}
                     </button>

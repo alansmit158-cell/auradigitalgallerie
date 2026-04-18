@@ -23,20 +23,33 @@ export async function POST(req: Request) {
     try {
         await connectToDatabase();
         const body = await req.json();
-        const { photos, senderName, message, isPrivate } = body; // photos = [{imageUrl, storagePath}]
+        const { photos, senderName, message, isPrivate } = body;
 
-        if (!photos || !Array.isArray(photos) || photos.length === 0) {
-            return NextResponse.json({ error: 'Image URLs are required' }, { status: 400 });
+        const hasPhotos = photos && Array.isArray(photos) && photos.length > 0;
+        const hasMessage = message && message.trim().length > 0;
+
+        if (!hasPhotos && !hasMessage) {
+            return NextResponse.json({ error: 'Une photo ou un message est requis' }, { status: 400 });
         }
 
         const isVisible = !isPrivate;
-
         const savedPhotos = [];
 
-        for (const p of photos) {
+        if (hasPhotos) {
+            for (const p of photos) {
+                const newPhoto = new Photo({
+                    imageUrl: p.imageUrl,
+                    publicId: p.publicId,
+                    senderName: senderName || 'Un invité',
+                    message: message || '',
+                    isVisible
+                });
+                const saved = await newPhoto.save();
+                savedPhotos.push(saved);
+            }
+        } else {
+            // Text only post
             const newPhoto = new Photo({
-                imageUrl: p.imageUrl,
-                publicId: p.publicId,
                 senderName: senderName || 'Un invité',
                 message: message || '',
                 isVisible

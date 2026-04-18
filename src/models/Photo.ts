@@ -1,8 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IPhoto extends Document {
-    imageUrl: string;
-    publicId: string; // Identifiant Cloudinary pour la suppression éventuelle
+    imageUrl?: string;
+    publicId?: string; // Identifiant Cloudinary pour la suppression éventuelle
     senderName?: string;
     message?: string;
     isVisible: boolean;
@@ -10,8 +10,8 @@ export interface IPhoto extends Document {
     expiresAt: Date; // TTL Index (7 jours)
 }
 const PhotoSchema: Schema = new Schema({
-    imageUrl: { type: String, required: true },
-    publicId: { type: String, required: true },
+    imageUrl: { type: String, required: false },
+    publicId: { type: String, required: false },
     senderName: { type: String, default: 'Un invité' },
     message: { type: String, default: '' },
     isVisible: { type: Boolean, default: true }, // Publique par défaut (selon la remarque)
