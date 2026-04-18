@@ -5,6 +5,7 @@ export interface IPhoto extends Document {
     publicId?: string; // Identifiant Cloudinary pour la suppression éventuelle
     senderName?: string;
     message?: string;
+    theme?: string;
     isVisible: boolean;
     createdAt: Date;
     expiresAt: Date; // TTL Index (7 jours)
@@ -14,6 +15,7 @@ const PhotoSchema: Schema = new Schema({
     publicId: { type: String, required: false },
     senderName: { type: String, default: 'Un invité' },
     message: { type: String, default: '' },
+    theme: { type: String, default: 'dark' },
     isVisible: { type: Boolean, default: true }, // Publique par défaut (selon la remarque)
     createdAt: { type: Date, default: Date.now },
     expiresAt: {

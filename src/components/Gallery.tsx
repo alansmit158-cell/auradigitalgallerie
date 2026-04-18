@@ -2,11 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, ShieldCheck, Trash2, X, Maximize2, User, MessageSquare, Eye } from "lucide-react";
+import { Download, ShieldCheck, Trash2, X, Maximize2, User, MessageSquare, Eye, Heart } from "lucide-react";
+
+// Mêmes thèmes définis que dans l'Upload pour la consistance
+const THEMES: Record<string, { className: string, textClassName: string }> = {
+    dark: { className: "bg-[#1A1820]", textClassName: "text-white" },
+    smiley: { className: "bg-[#FDEBB6]", textClassName: "text-[#D2891B]" },
+    light: { className: "bg-[#F3F4F6]", textClassName: "text-[#1E1B26]" },
+    pink: { className: "bg-[#FBD6E6]", textClassName: "text-primary" },
+    gradient: { className: "bg-gradient-to-br from-slate-700 via-slate-800 to-zinc-900", textClassName: "text-white" }
+};
 
 interface PhotoData {
     _id: string;
-    imageUrl: string;
+    imageUrl?: string;
+    publicId?: string;
+    theme?: string;
     senderName?: string;
     message?: string;
     createdAt: string;
@@ -166,12 +177,19 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                             onClick={() => setSelectedPhoto(photo)}
                             className={`break-inside-avoid relative group rounded-[20px] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 bg-white cursor-zoom-in ${!photo.isVisible ? "ring-2 ring-primary ring-offset-2" : ""}`}
                         >
-                            <img
-                                src={photo.imageUrl}
-                                alt="Photo de mariage"
-                                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
-                                loading="lazy"
-                            />
+                            {photo.imageUrl ? (
+                                <img
+                                    src={photo.imageUrl}
+                                    alt="Photo de mariage"
+                                    className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    loading="lazy"
+                                />
+                            ) : (
+                                <div className={`w-full min-h-[200px] p-8 flex flex-col justify-center items-center text-center transform group-hover:scale-105 transition-transform duration-700 ${THEMES[photo.theme || 'dark']?.className || THEMES['dark'].className}`}>
+                                    {photo.theme === 'pink' ? <Heart className="w-8 h-8 text-primary/30 mb-4" /> : <MessageSquare className={`w-8 h-8 mb-4 opacity-30 ${THEMES[photo.theme || 'dark']?.textClassName}`} />}
+                                    <p className={`font-bold text-xl md:text-2xl leading-tight ${THEMES[photo.theme || 'dark']?.textClassName || 'text-white'}`}>"{photo.message}"</p>
+                                </div>
+                            )}
 
                             {!photo.isVisible && (
                                 <div className="absolute top-2 left-2 px-2 py-1 bg-amber-500 text-white text-[8px] font-bold uppercase rounded shadow-lg z-10">
@@ -204,15 +222,17 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                                             <Eye className="w-3.5 h-3.5" />
                                         </button>
                                     )}
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            downloadImage(photo.imageUrl, `mariage-${photo._id}.jpg`);
-                                        }}
-                                        className="p-1.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors shadow-lg"
-                                    >
-                                        <Download className="w-3.5 h-3.5" />
-                                    </button>
+                                    {photo.imageUrl && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                downloadImage(photo.imageUrl!, `mariage-${photo._id}.jpg`);
+                                            }}
+                                            className="p-1.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors shadow-lg"
+                                        >
+                                            <Download className="w-3.5 h-3.5" />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
@@ -246,11 +266,18 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
 
                             {/* Image (Gauche) */}
                             <div className="md:w-3/5 bg-stone-100 relative group min-h-[50vh] md:min-h-[300px]">
-                                <img
-                                    src={selectedPhoto.imageUrl}
-                                    alt="Détails"
-                                    className="w-full h-full object-contain"
-                                />
+                                {selectedPhoto.imageUrl ? (
+                                    <img
+                                        src={selectedPhoto.imageUrl}
+                                        alt="Détails"
+                                        className="w-full h-full object-contain"
+                                    />
+                                ) : (
+                                    <div className={`w-full h-full min-h-[50vh] p-8 md:p-16 flex flex-col justify-center items-center text-center ${THEMES[selectedPhoto.theme || 'dark']?.className || THEMES['dark'].className}`}>
+                                        {selectedPhoto.theme === 'pink' ? <Heart className="w-16 h-16 text-primary/30 mb-8 fill-primary/30" /> : <MessageSquare className={`w-16 h-16 mb-8 opacity-30 ${THEMES[selectedPhoto.theme || 'dark']?.textClassName}`} />}
+                                        <p className={`font-bold text-4xl md:text-6xl leading-tight ${THEMES[selectedPhoto.theme || 'dark']?.textClassName || 'text-white'}`}>"{selectedPhoto.message}"</p>
+                                    </div>
+                                )}
                                 {!selectedPhoto.isVisible && (
                                     <div className="absolute top-4 left-4 px-3 py-1 bg-amber-500 text-white text-[10px] font-bold uppercase rounded-full shadow-lg">
                                         Privé
@@ -283,15 +310,17 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                                             )}
                                         </>
                                     )}
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            downloadImage(selectedPhoto.imageUrl, `mariage-${selectedPhoto._id}.jpg`);
-                                        }}
-                                        className="p-4 bg-primary text-white rounded-full shadow-2xl active:scale-95"
-                                    >
-                                        <Download className="w-6 h-6" />
-                                    </button>
+                                    {selectedPhoto.imageUrl && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                downloadImage(selectedPhoto.imageUrl!, `mariage-${selectedPhoto._id}.jpg`);
+                                            }}
+                                            className="p-4 bg-primary text-white rounded-full shadow-2xl active:scale-95"
+                                        >
+                                            <Download className="w-6 h-6" />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
 

@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     try {
         await connectToDatabase();
         const body = await req.json();
-        const { photos, senderName, message, isPrivate } = body;
+        const { photos, senderName, message, theme, isPrivate } = body;
 
         const hasPhotos = photos && Array.isArray(photos) && photos.length > 0;
         const hasMessage = message && message.trim().length > 0;
@@ -52,6 +52,7 @@ export async function POST(req: Request) {
             const newPhoto = new Photo({
                 senderName: senderName || 'Un invité',
                 message: message || '',
+                theme: theme || 'dark',
                 isVisible
             });
             const saved = await newPhoto.save();
