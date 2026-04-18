@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function CoupleSection() {
     return (
-        <section className="py-20 px-4 bg-stone-50 overflow-hidden">
+        <section className="py-20 px-4 bg-white overflow-hidden">
             <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
                 {/* Image Section */}
@@ -18,11 +18,11 @@ export default function CoupleSection() {
                 >
                     <Image
                         src="/wedding_couple_illustration.png"
-                        alt="Raouia & Islem"
+                        alt="Mustafa & Ahlem"
                         fill
                         className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/40 to-transparent"></div>
+                    <div className="absolute inset-0 bg-dark/10"></div>
                 </motion.div>
 
                 {/* Text Section */}
@@ -34,18 +34,18 @@ export default function CoupleSection() {
                     className="space-y-8 flex flex-col justify-center"
                 >
                     <div className="space-y-2">
-                        <span className="text-amber-600 font-serif italic text-2xl">Les futurs mariés</span>
-                        <h2 className="text-6xl font-serif text-stone-900 leading-tight">Raouia & Islem</h2>
+                        <span className="text-primary font-bold uppercase tracking-widest text-sm">Les futurs mariés</span>
+                        <h2 className="text-5xl md:text-6xl font-bold text-dark leading-tight">Mustafa & Ahlem</h2>
                     </div>
 
-                    <p className="text-xl text-stone-600 font-light leading-relaxed">
+                    <p className="text-xl text-gray-600 font-medium leading-relaxed max-w-lg">
                         "Dans l'éclat de notre amour, chaque instant partagé devient un trésor précieux.
                         Nous sommes heureux de célébrer ce nouveau chapitre de notre vie entourés de nos familles et amis."
                     </p>
 
                     <div className="flex gap-4 items-center">
-                        <div className="w-12 h-[1px] bg-amber-300"></div>
-                        <p className="text-amber-800 font-medium tracking-widest uppercase text-sm">Dimanche, 01 Mars 2026</p>
+                        <div className="w-12 h-1 bg-primary rounded-full"></div>
+                        <p className="text-dark font-bold tracking-widest uppercase text-sm">Vendredi, 01 Mai 2026</p>
                     </div>
 
                     <div className="pt-4">
@@ -53,7 +53,7 @@ export default function CoupleSection() {
                             href="#galerie"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="inline-block px-10 py-4 bg-stone-900 text-amber-50 rounded-full font-medium shadow-xl hover:bg-stone-800 transition-colors"
+                            className="inline-block px-10 py-4 bg-primary text-white rounded-full font-bold shadow-xl shadow-primary/30 hover:bg-primary-dark transition-colors"
                         >
                             Voir la galerie
                         </motion.a>

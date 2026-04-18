@@ -99,7 +99,7 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600"></div>
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
             </div>
         );
     }
@@ -119,7 +119,7 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
         <div className="space-y-6">
             <div className="flex flex-col items-center gap-4 mb-8">
                 {isAdmin && (
-                    <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-full border border-amber-200 shadow-sm">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full border border-primary/20 shadow-sm">
                         <ShieldCheck className="w-4 h-4" />
                         <span className="text-xs font-bold uppercase tracking-widest">Mode Mariés (Tout est visible)</span>
                     </div>
@@ -131,21 +131,21 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-3 px-6 py-3 bg-white border border-stone-100 shadow-xl rounded-2xl"
                 >
-                    <div className="p-2 bg-amber-50 rounded-lg">
+                    <div className="p-2 bg-primary/10 rounded-lg">
                         <motion.div
                             animate={{ scale: [1, 1.2, 1] }}
                             transition={{ repeat: Infinity, duration: 2 }}
                         >
-                            <Maximize2 className="w-4 h-4 text-amber-600" />
+                            <Maximize2 className="w-4 h-4 text-primary" />
                         </motion.div>
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-[10px] text-stone-400 uppercase font-bold tracking-tighter leading-none">Total Souvenirs</span>
+                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-tighter leading-none">Total Souvenirs</span>
                         <motion.span
                             key={photos.length}
-                            initial={{ scale: 1.5, color: "#d97706" }}
-                            animate={{ scale: 1, color: "#1c1917" }}
-                            className="text-xl font-serif font-bold text-stone-900"
+                            initial={{ scale: 1.5, color: "#FD0890" }}
+                            animate={{ scale: 1, color: "#1E1B26" }}
+                            className="text-xl font-bold text-dark"
                         >
                             {photos.length}
                         </motion.span>
@@ -164,7 +164,7 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ duration: 0.4 }}
                             onClick={() => setSelectedPhoto(photo)}
-                            className={`break-inside-avoid relative group rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 bg-white cursor-zoom-in ${!photo.isVisible ? "ring-2 ring-amber-500 ring-offset-2" : ""}`}
+                            className={`break-inside-avoid relative group rounded-[20px] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 bg-white cursor-zoom-in ${!photo.isVisible ? "ring-2 ring-primary ring-offset-2" : ""}`}
                         >
                             <img
                                 src={photo.imageUrl}
@@ -209,7 +209,7 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                                             e.stopPropagation();
                                             downloadImage(photo.imageUrl, `mariage-${photo._id}.jpg`);
                                         }}
-                                        className="p-1.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-amber-600 transition-colors shadow-lg"
+                                        className="p-1.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors shadow-lg"
                                     >
                                         <Download className="w-3.5 h-3.5" />
                                     </button>
@@ -288,7 +288,7 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                                             e.stopPropagation();
                                             downloadImage(selectedPhoto.imageUrl, `mariage-${selectedPhoto._id}.jpg`);
                                         }}
-                                        className="p-4 bg-amber-600 text-white rounded-full shadow-2xl active:scale-95"
+                                        className="p-4 bg-primary text-white rounded-full shadow-2xl active:scale-95"
                                     >
                                         <Download className="w-6 h-6" />
                                     </button>
@@ -299,22 +299,22 @@ export default function Gallery({ isAdmin = false }: GalleryProps) {
                             <div className="md:w-2/5 p-6 md:p-12 flex flex-col justify-between space-y-6 bg-white overflow-y-auto">
                                 <div className="space-y-6 mt-2 md:mt-0">
                                     <div className="space-y-2">
-                                        <div className="flex items-center gap-2 text-amber-600">
+                                        <div className="flex items-center gap-2 text-primary">
                                             <User className="w-4 h-4" />
                                             <span className="text-[10px] font-bold uppercase tracking-widest">Partagé par</span>
                                         </div>
-                                        <p className="text-xl md:text-2xl font-serif text-stone-900">{selectedPhoto.senderName}</p>
+                                        <p className="text-xl md:text-2xl font-bold text-dark">{selectedPhoto.senderName}</p>
                                     </div>
 
                                     {selectedPhoto.message && (
                                         <div className="space-y-4">
-                                            <div className="flex items-center gap-3 text-amber-600">
-                                                <div className="p-2 bg-amber-50 rounded-xl">
+                                            <div className="flex items-center gap-3 text-primary">
+                                                <div className="p-2 bg-primary/10 rounded-[14px]">
                                                     <MessageSquare className="w-5 h-5" />
                                                 </div>
                                                 <span className="text-xs font-bold uppercase tracking-widest">Leur mot doux</span>
                                             </div>
-                                            <p className="text-stone-600 font-light leading-relaxed italic border-l-2 border-stone-100 pl-4 py-1">
+                                            <p className="text-gray-600 font-medium leading-relaxed italic border-l-2 border-primary/20 pl-4 py-1">
                                                 "{selectedPhoto.message}"
                                             </p>
                                         </div>

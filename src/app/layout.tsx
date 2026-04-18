@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-});
-
 export const metadata: Metadata = {
-  title: "Galerie Raouia & Islem",
-  description: "Partagez vos plus belles photos du mariage de Raouia & Islem.",
+  title: "Galerie Mustafa & Ahlem",
+  description: "Partagez vos plus belles photos du mariage de Mustafa & Ahlem.",
 };
 
 export default function RootLayout({
@@ -23,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${inter.variable} ${playfair.variable} scroll-smooth`}>
-      <body className="antialiased min-h-screen text-stone-900 bg-stone-50">
+    <html lang="fr" className={`${montserrat.variable} scroll-smooth`}>
+      <body className="antialiased min-h-screen text-dark bg-white">
         {children}
       </body>
     </html>

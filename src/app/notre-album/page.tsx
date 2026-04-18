@@ -15,7 +15,7 @@ export default function PrivateAlbumPage() {
     const [isTesting, setIsTesting] = useState(false);
     const [testResult, setTestResult] = useState<{ success: boolean, message: string } | null>(null);
 
-    const CORRECT_PASSWORD = "raouiaislem03.05.2026";
+    const CORRECT_PASSWORD = "mustafaahlem01.05.2026";
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,14 +57,14 @@ export default function PrivateAlbumPage() {
                         exit={{ opacity: 0, scale: 0.95 }}
                         className="max-w-md mx-auto mt-20"
                     >
-                        <div className="bg-white p-10 rounded-[3rem] shadow-2xl border border-stone-100 flex flex-col items-center space-y-8">
-                            <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center text-amber-600">
+                        <div className="bg-white p-10 rounded-[3rem] shadow-2xl border border-gray-100 flex flex-col items-center space-y-8">
+                            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary">
                                 <Lock className="w-8 h-8" />
                             </div>
 
                             <div className="text-center space-y-2">
-                                <h1 className="text-2xl font-serif text-stone-900">Espace Mariés</h1>
-                                <p className="text-sm text-stone-500 font-light">Veuillez entrer le mot de passe secret pour accéder à votre album.</p>
+                                <h1 className="text-3xl font-bold text-dark">Espace Mariés</h1>
+                                <p className="text-sm text-gray-500 font-medium">Veuillez entrer le mot de passe secret pour accéder à votre album.</p>
                             </div>
 
                             <form onSubmit={handleLogin} className="w-full space-y-4">
@@ -77,11 +77,11 @@ export default function PrivateAlbumPage() {
                                             setPassword(e.target.value);
                                             setError(false);
                                         }}
-                                        className={`w-full px-5 py-4 rounded-xl border ${error ? "border-red-300 bg-red-50" : "border-gray-100 bg-gray-50 uppercase tracking-widest"} focus:bg-white focus:ring-2 focus:ring-amber-500/50 outline-none transition-all placeholder:capitalize placeholder:tracking-normal`}
+                                        className={`w-full px-5 py-4 rounded-full border ${error ? "border-red-300 bg-red-50" : "border-gray-100 bg-gray-50 uppercase tracking-widest"} focus:bg-white focus:ring-2 focus:ring-primary/50 outline-none transition-all placeholder:capitalize placeholder:tracking-normal`}
                                     />
                                     <button
                                         type="submit"
-                                        className="absolute right-2 top-2 bottom-2 px-4 bg-stone-900 text-amber-50 rounded-lg hover:bg-stone-800 transition-colors"
+                                        className="absolute right-2 top-2 bottom-2 px-6 bg-primary text-white rounded-full hover:bg-primary-dark transition-colors font-bold"
                                     >
                                         <ArrowRight className="w-4 h-4" />
                                     </button>
@@ -121,16 +121,16 @@ export default function PrivateAlbumPage() {
                             </Link>
 
                             <div className="space-y-4">
-                                <div className="flex items-center justify-center gap-3 text-amber-600 mb-2">
+                                <div className="flex items-center justify-center gap-3 text-primary mb-2">
                                     <Heart className="w-6 h-6 fill-current" />
                                     <span className="uppercase tracking-[0.3em] text-sm font-bold">Espace Privé</span>
                                     <Heart className="w-6 h-6 fill-current" />
                                 </div>
-                                <h1 className="text-4xl md:text-6xl font-serif text-stone-900 leading-tight">
+                                <h1 className="text-4xl md:text-6xl font-bold text-dark leading-tight">
                                     Notre Album Secret
                                 </h1>
-                                <p className="text-stone-500 font-light max-w-xl mx-auto italic text-sm md:text-base">
-                                    Raouia & Islem, voici toutes les photos partagées par vos invités, y compris les souvenirs gardés privés.
+                                <p className="text-gray-500 font-medium max-w-xl mx-auto text-sm md:text-base">
+                                    Mustafa & Ahlem, voici toutes les photos partagées par vos invités, y compris les souvenirs gardés privés.
                                 </p>
 
                                 {/* Outil de Diagnostic Vercel */}
@@ -139,9 +139,9 @@ export default function PrivateAlbumPage() {
                                         <button
                                             onClick={runVercelTest}
                                             disabled={isTesting}
-                                            className="inline-flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full text-xs font-semibold transition-all border border-stone-200 disabled:opacity-50"
+                                            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full text-xs font-bold transition-all border border-gray-200 disabled:opacity-50"
                                         >
-                                            {isTesting ? <Loader2 className="w-3 h-3 animate-spin text-amber-600" /> : <Activity className="w-3 h-3 text-amber-600" />}
+                                            {isTesting ? <Loader2 className="w-3 h-3 animate-spin text-primary" /> : <Activity className="w-3 h-3 text-primary" />}
                                             {isTesting ? "Test de connexion en cours..." : "Lancer un test de connexion (Vercel)"}
                                         </button>
                                     ) : (
@@ -157,7 +157,7 @@ export default function PrivateAlbumPage() {
                                     )}
                                 </div>
                             </div>
-                            <div className="w-24 h-1 bg-amber-200 rounded-full"></div>
+                            <div className="w-24 h-1 bg-primary rounded-full"></div>
                         </div>
 
                         {/* Galerie en mode Admin */}

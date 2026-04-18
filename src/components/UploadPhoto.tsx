@@ -126,8 +126,8 @@ export default function UploadPhoto() {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto p-6 bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-amber-100/50">
-            <h2 className="text-3xl font-serif text-amber-900 text-center mb-6 tracking-tight">Partager un souvenir</h2>
+        <div className="w-full max-w-md mx-auto p-6 bg-white/90 backdrop-blur-xl rounded-[30px] shadow-2xl border border-gray-100">
+            <h2 className="text-3xl font-bold text-dark text-center mb-6 tracking-tight">Partager un souvenir</h2>
 
             {status === "success" ? (
                 <motion.div
@@ -142,7 +142,7 @@ export default function UploadPhoto() {
                     <p className="text-sm text-gray-500 px-4">Elles seront visibles dans la galerie pendant 7 jours.</p>
                     <button
                         onClick={() => setStatus("idle")}
-                        className="mt-6 px-8 py-3 bg-amber-600/10 text-amber-800 font-medium rounded-full hover:bg-amber-600/20 transition-colors"
+                        className="mt-6 px-8 py-3 bg-primary/10 text-primary font-bold rounded-full hover:bg-primary/20 transition-colors"
                     >
                         Ajouter d'autres photos
                     </button>
@@ -152,7 +152,7 @@ export default function UploadPhoto() {
                     <div className="space-y-4">
                         <div
                             onClick={() => fileInputRef.current?.click()}
-                            className="relative flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden border-gray-200 bg-gray-50/50 hover:bg-gray-100 hover:border-amber-200"
+                            className="relative flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-[20px] cursor-pointer transition-all duration-300 overflow-hidden border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary"
                         >
                             <input
                                 type="file"
@@ -164,7 +164,7 @@ export default function UploadPhoto() {
                             />
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                 <div className="p-4 bg-white rounded-full shadow-sm mb-4">
-                                    <ImagePlus className="w-8 h-8 text-amber-500" />
+                                    <ImagePlus className="w-8 h-8 text-primary" />
                                 </div>
                                 <p className="mb-1 text-sm text-gray-600 font-medium px-4 text-center">Appuyez pour sélectionner plusieurs photos</p>
                                 <p className="text-xs text-gray-400">JPG, PNG, WEBP (Cloudinary Gratuit)</p>
@@ -172,7 +172,7 @@ export default function UploadPhoto() {
                         </div>
 
                         {files.length > 0 && (
-                            <div className="flex gap-3 overflow-x-auto py-2 -mx-2 px-2 snap-x scrollbar-thin scrollbar-thumb-amber-200 scrollbar-track-transparent">
+                            <div className="flex gap-3 overflow-x-auto py-2 -mx-2 px-2 snap-x scrollbar-thin scrollbar-thumb-primary/50 scrollbar-track-transparent">
                                 {files.map((f, index) => (
                                     <div key={index} className="relative w-20 h-20 flex-shrink-0 snap-center rounded-xl overflow-hidden shadow-sm group">
                                         <img src={f.preview} alt="Aperçu" className="w-full h-full object-cover" />
@@ -195,7 +195,7 @@ export default function UploadPhoto() {
                             placeholder="Votre nom/pseudo (optionnel)"
                             value={senderName}
                             onChange={(e) => setSenderName(e.target.value)}
-                            className="w-full px-5 py-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all placeholder:text-gray-400"
+                            className="w-full px-5 py-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all placeholder:text-gray-400"
                         />
 
                         <textarea
@@ -203,18 +203,18 @@ export default function UploadPhoto() {
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             rows={3}
-                            className="w-full px-5 py-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all resize-none placeholder:text-gray-400"
+                            className="w-full px-5 py-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all resize-none placeholder:text-gray-400"
                         />
                     </div>
 
                     <div className="pt-2">
-                        <label className="flex items-center space-x-4 cursor-pointer group bg-amber-50/50 p-4 rounded-xl border border-amber-100/50 hover:bg-amber-50 transition-colors">
+                        <label className="flex items-center space-x-4 cursor-pointer group bg-gray-50 p-4 rounded-xl border border-gray-100 hover:bg-primary/5 transition-colors">
                             <div className="relative flex items-center">
                                 <input
                                     type="checkbox"
                                     checked={isPrivate}
                                     onChange={(e) => setIsPrivate(e.target.checked)}
-                                    className="w-5 h-5 rounded border-amber-300 text-amber-600 focus:ring-amber-500 transition cursor-pointer"
+                                    className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary transition cursor-pointer"
                                 />
                             </div>
                             <div className="flex flex-col">
@@ -227,7 +227,7 @@ export default function UploadPhoto() {
                     <button
                         type="submit"
                         disabled={files.length === 0 || isUploading}
-                        className={`w-full flex items-center justify-center px-6 py-4 rounded-xl font-medium text-white transition-all duration-300 ${files.length === 0 || isUploading ? "bg-amber-200 cursor-not-allowed text-amber-50" : "bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 shadow-xl shadow-amber-500/20 transform hover:-translate-y-0.5"}`}
+                        className={`w-full flex items-center justify-center px-6 py-4 rounded-full font-bold text-white transition-all duration-300 ${files.length === 0 || isUploading ? "bg-gray-300 cursor-not-allowed" : "bg-primary hover:bg-primary-dark shadow-xl hover:-translate-y-0.5"}`}
                     >
                         {isUploading ? (
                             <div className="flex items-center space-x-2">
